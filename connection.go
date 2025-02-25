@@ -519,6 +519,7 @@ func (c *Connection) Reply(ctx context.Context, opErr error) error {
 			c.debugLog(fuseID, 1, "-> %s", describeResponse(op))
 		} else {
 			if c.shouldLogError(op, opErr) {
+				// Error logging
 				msg := fmt.Sprintf(
 					"Op 0x%08x %24s] %v",
 					fuseID,
