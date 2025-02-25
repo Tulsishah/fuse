@@ -518,19 +518,17 @@ func (c *Connection) Reply(ctx context.Context, opErr error) error {
 		if opErr == nil {
 			c.debugLog(fuseID, 1, "-> %s", describeResponse(op))
 		} else {
-			c.debugLog(fuseID, 1, "-> Error: %q", opErr.Error())
+			if c.shouldLogError(op, opErr) {
+				msg := fmt.Sprintf(
+					"Op 0x%08x %24s] %v",
+					fuseID,
+					fmt.Sprintf("%T", op),
+					fmt.Sprintf("-> Error: %q", opErr))
+				c.errorLogger.Println(msg)
+			} else {
+				c.debugLog(fuseID, 1, "-> Error: %q", opErr.Error())
+			}
 		}
-	}
-
-	// Error logging
-	if c.shouldLogError(op, opErr) {
-		// Format the actual message to be printed.
-		errMsg := fmt.Sprintf(
-			"Op 0x%08x %24s] %v",
-			fuseID,
-			fmt.Sprintf("%T", op),
-			fmt.Sprintf("-> Error: %q", opErr))
-		c.errorLogger.Println(errMsg)
 	}
 
 	// Send the reply to the kernel, if one is required.
