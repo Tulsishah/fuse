@@ -521,10 +521,8 @@ func (c *Connection) Reply(ctx context.Context, opErr error) error {
 			if c.shouldLogError(op, opErr) {
 				// Error logging
 				msg := fmt.Sprintf(
-					"Op 0x%08x %24s] %v",
-					fuseID,
-					fmt.Sprintf("%T", op),
-					fmt.Sprintf("-> Error: %q", opErr))
+					"Op 0x%08x %T] -> Error: %q",
+					fuseID, op, opErr)
 				c.errorLogger.Println(msg)
 			} else {
 				c.debugLog(fuseID, 1, "-> Error: %q", opErr.Error())
